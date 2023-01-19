@@ -660,25 +660,25 @@ def get_versioned_lists(config, chunknum, version):
 def start_versioning(config, chunknum, shavar_prod_lists_branches):
     for branch in shavar_prod_lists_branches:
         branch_name = branch.get('name')
-        ver = p_version.parse(branch_name)
-        if isinstance(ver, p_version.Version):
-            print('\n\n*** Start Versioning for {ver} ***'.format(
-                ver=branch_name)
-            )
-            get_versioned_lists(config, chunknum, version=branch_name)
-            print('\n*** Publish Versioned Lists ***')
-            # publish_to_cloud(config, chunknum, check_versioning=True)
-            print('\n*** Revert Configs ***')
-            revert_config(config, branch_name)
-        else:
-            print('\n\n*** {branch} is not a versioning branch ***'.format(
-                branch=branch_name)
-            )
-
+        if branch_name[0].isdigit():
+            ver = p_version.parse(branch_name)
+            if isinstance(ver, p_version.Version):
+                print('\n\n*** Start Versioning for {ver} ***'.format(
+                    ver=branch_name)
+                )
+                get_versioned_lists(config, chunknum, version=branch_name)
+                print('\n*** Publish Versioned Lists ***')
+                # publish_to_cloud(config, chunknum, check_versioning=True)
+                print('\n*** Revert Configs ***')
+                revert_config(config, branch_name)
+            else:
+                print('\n\n*** {branch} is not a versioning branch ***'.format(
+                    branch=branch_name)
+                )
 
 def main():
     config = configparser.ConfigParser()
-    filename = config.read(["shavar_list_creat_latest_prod.ini"])
+    filename = config.read(["shavar_list_creation.ini"])
     if not filename:
         sys.stderr.write("Error loading shavar_list_creation.ini\n")
         sys.exit(-1)
